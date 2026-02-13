@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Fernanda ❤️</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:radial-gradient(circle at center,#ff2e63,#8e0038);
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
+  text-align:center;
+}
+
+/* SOBRE */
+.envelope{
+  width:250px;
+  height:180px;
+  background:#fff;
+  position:relative;
+  cursor:pointer;
+  border-radius:10px;
+  box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
+
+.flap{
+  position:absolute;
+  width:0;
+  height:0;
+  border-left:125px solid transparent;
+  border-right:125px solid transparent;
+  border-bottom:90px solid #ff4d6d;
+  top:-90px;
+  transition:transform 1s ease;
+  transform-origin:bottom;
+}
+
+.open .flap{
+  transform:rotateX(180deg);
+}
+
+.page{
+  position:absolute;
+  width:90%;
+  max-width:650px;
+  opacity:0;
+  transform:scale(0.7);
+  transition:all 1s ease;
+}
+
+.active{
+  opacity:1;
+  transform:scale(1);
+}
+
+button{
+  margin:15px;
+  padding:12px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.yes{
+  background:white;
+  color:#ff2e63;
+}
+
+.yes:hover{
+  transform:scale(1.2);
+}
+
+.no{
+  background:black;
+  color:white;
+  position:absolute;
+}
+
+.love-text{
+  font-size:3.5em;
+  font-weight:bold;
+  animation:glow 1s infinite alternate;
+}
+
+@keyframes glow{
+  from{transform:scale(1); text-shadow:0 0 10px white;}
+  to{transform:scale(1.2); text-shadow:0 0 40px #fff;}
+}
+
+/* Corazones explosión */
+.explosion{
+  position:absolute;
+  font-size:25px;
+  animation:explode 1.5s ease-out forwards;
+}
+
+@keyframes explode{
+  from{transform:translate(0,0) scale(1); opacity:1;}
+  to{
+    transform:translate(var(--x),var(--y)) scale(2);
+    opacity:0;
+  }
+}
+
+/* Cuenta regresiva */
+#countdown{
+  font-size:1.5em;
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/10/25/audio_946b4c3cf4.mp3" type="audio/mp3">
+</audio>
+
+<!-- SOBRE -->
+<div class="envelope" id="envelope">
+  <div class="flap"></div>
+</div>
+
+<!-- Página 1 -->
+<div class="page" id="page1">
+  <h1>Fernanda… ❤️<br><br>
+  ¿Quieres ser mi Valentín?</h1>
+  <button class="yes" onclick="nextPage(2)">Sí, obvio 😘</button>
+  <button class="no" id="noBtn">No 😅</button>
+</div>
+
+<!-- Página 2 -->
+<div class="page" id="page2">
+  <h1>
+  Cuando algo es importante… se toma con decisión.<br><br>
+  Tú eres intensidad, carácter y ternura escondida.<br><br>
+  Me apresuro porque no quiero perder ni un segundo  
+  sin decirte que eres simplemente increíble.<br><br>
+  No te quiero a medias… te quiero completa.
+  </h1>
+  <button class="yes" onclick="nextPage(3)">Sigue… 💌</button>
+</div>
+
+<!-- Página 3 -->
+<div class="page" id="page3">
+  <div class="love-text">TE AMO MI AMOR 💞</div>
+  <h1 style="margin-top:25px;">
+  Esta noche paso por ti.<br>
+  20:00 hrs.<br>
+  Prepárate… voy decidido. 🔥
+  </h1>
+  <div id="countdown"></div>
+</div>
+
+<script>
+const envelope=document.getElementById("envelope");
+const music=document.getElementById("music");
+
+envelope.addEventListener("click",()=>{
+  envelope.classList.add("open");
+  explodeHearts();
+  setTimeout(()=>{
+    envelope.style.display="none";
+    document.getElementById("page1").classList.add("active");
+  },1000);
+  music.play();
+});
+
+function explodeHearts(){
+  for(let i=0;i<30;i++){
+    const heart=document.createElement("div");
+    heart.classList.add("explosion");
+    heart.innerHTML="💖";
+    heart.style.left="50%";
+    heart.style.top="50%";
+    heart.style.setProperty('--x',(Math.random()*600-300)+"px");
+    heart.style.setProperty('--y',(Math.random()*600-300)+"px");
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),1500);
+  }
+}
+
+function nextPage(num){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+num).classList.add('active');
+}
+
+/* Botón No que escapa */
+const noBtn=document.getElementById('noBtn');
+noBtn.addEventListener('mouseover',()=>{
+  noBtn.style.left=Math.random()*window.innerWidth*0.8+"px";
+  noBtn.style.top=Math.random()*window.innerHeight*0.8+"px";
+});
+
+/* Cuenta regresiva a las 20:00 */
+function updateCountdown(){
+  const now=new Date();
+  const target=new Date();
+  target.setHours(20,0,0,0);
+
+  if(now>target){
+    target.setDate(target.getDate()+1);
+  }
+
+  const diff=target-now;
+  const hours=Math.floor(diff/1000/60/60);
+  const minutes=Math.floor((diff/1000/60)%60);
+  const seconds=Math.floor((diff/1000)%60);
+
+  document.getElementById("countdown").innerHTML=
+    "Faltan "+hours+"h "+minutes+"m "+seconds+"s para las 20:00 ⏳";
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+</script>
+
+</body>
+</html>
